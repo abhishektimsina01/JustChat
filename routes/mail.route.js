@@ -6,6 +6,6 @@ import { upload } from "../middleware/multer.js";
 const mailRouter = express.Router()
 
 // router-level
-mailRouter.post("/mail", upload.array("mailefiles", 5), mailLogic)
+mailRouter.post("/mail", upload.array("files", 5), mailLogic)
 
 export {mailRouter}

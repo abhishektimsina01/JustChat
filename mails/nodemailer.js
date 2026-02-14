@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer"
 
-const transporter = nodemailer.transporter({
+const transporter = nodemailer.createTransport({
     secure : true,
     host : "smtp.gmail.com",
     service : "gmail",
@@ -11,4 +11,11 @@ const transporter = nodemailer.transporter({
     }
 })
 
-export {transporter}
+const mailOption = {
+    from : "timsinaabhishek1@gmail.com",
+    to : "",
+    subject : "",
+    text : "Email from JustChat"
+}
+
+export {transporter, mailOption}

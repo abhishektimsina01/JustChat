@@ -19,14 +19,14 @@ const upload = multer({
         fileSize : 1024 * 1024 * 3,
         files : 5
     },
-    fileFilter : (req, file, cb) =>{
-        if(file.mimetype.startsWith("image") || file.mimetype.startsWith("pdf")){
-            cb(null, true)
-        }
-        else{
-            cb(null, new Error("It must be either image or pdf"))
-        }
-    }
+    // fileFilter : (req, file, cb) =>{
+    //     if(file.mimetype.startsWith("image") || file.mimetype.startsWith("pdf")){
+    //         cb(null, true)
+    //     }
+    //     else{
+    //         cb(null, new Error("It must be either image or pdf"))
+    //     }
+    // }
 })
 
 
