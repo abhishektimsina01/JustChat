@@ -1,8 +1,8 @@
 import express from "express"
 import dotenv from "dotenv"
 import http from "http"
-import Server from "socket.io"
-import connection_db from "./config/db.config.js"
+import {Server} from "socket.io"
+import {connection_db} from "./config/db.config.js"
 import { server_middleware } from "./middleware/server.middleware.js"
 import {error_handler} from "./middleware/error_handler.middleware.js"
 import { mailRouter } from "./routes/mail.route.js"
@@ -30,15 +30,20 @@ app.use(error_handler)
 
 // database hunxa ani balla server
 async function start_server(){
-    await connection_db(process.env.mongoose_url)
-    app.listen(process.env.port, (err)=>{
-        if(err){
-            console.log(`The server couldnot start on port ${process.env.port} due to \nerror name:- ${err.name} \nerror: ${err.message}`)
-        }
-        else{
-            console.log(`The server has started successfully on the port ${process.env.port}`)
-        }
-    })
+    try{
+        await connection_db(process.env.mongoose_url)
+        app.listen(process.env.port, (err)=>{
+            if(err){
+                console.log(`The server couldnot start on port ${process.env.port} due to \nerror name:- ${err.name} \nerror: ${err.message}`)
+            }
+            else{
+                console.log(`The server has started successfully on the port ${process.env.port}`)
+            }
+        })
+    }
+    catch(err){
+        console.log(err)
+    }
 }
 
 start_server()

@@ -2,7 +2,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import morgan from "morgan"
 import express from "express"
-import { limiter } from "../config/rateLimit"
+import {limiter} from "../config/rateLimit.js"
 
 function server_middleware(app){
     app.use(limiter)
@@ -10,7 +10,7 @@ function server_middleware(app){
     app.use(cookieParser())
     app.use(express.json())
     app.use(express.urlencoded({extended : true}))
-    app(cors())
+    app.use(cors())
 }
 
 
