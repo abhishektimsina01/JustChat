@@ -28,6 +28,7 @@ app.post("/api", mailRouter)
 // error handlre
 app.use(error_handler)
 
+// database hunxa ani balla server
 async function start_server(){
     await connection_db(process.env.mongoose_url)
     app.listen(process.env.port, (err)=>{
