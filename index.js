@@ -5,7 +5,7 @@ import Server from "socket.io"
 import connection_db from "./config/db.config.js"
 import { server_middleware } from "./middleware/server.middleware.js"
 import {error_handler} from "./middleware/error_handler.middleware.js"
-import { nextTick } from "process"
+import { mailRouter } from "./routes/mail.route.js"
 
 // to access the .env file
 dotenv.config()
@@ -23,15 +23,9 @@ const io = new Server(server)
 server_middleware(app)
 
 //router
-app.post("/api/mail", async(req, res, next)=>{
-    try{
+app.post("/api", mailRouter)
 
-    }
-    catch(err){
-        next(err)
-    }
-})
-
+// error handlre
 app.use(error_handler)
 
 async function start_server(){

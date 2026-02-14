@@ -1,0 +1,1 @@
+// this will contain the model that will be of the schema that will contain, room name, number_of_users_max, messages
