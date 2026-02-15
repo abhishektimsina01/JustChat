@@ -1,14 +1,13 @@
 import { transporter } from "../mails/nodemailer.js";
-
+import fs from "fs"
 const sendMail = async(mailOption) => {
-    await transporter.sendMail(mailOption, (err, info) =>{
-    if(err){
-        throw err
+    const info = await transporter.sendMail(mailOption)
+    console.log(info.response)
+    const attachments = mailOption.attachments
+    console.log(attachments)
+    for(let file of attachments){
+        fs.unlinkSync(file.path)
     }
-    else{
-        console.log("email sent", info.respone)
-    }
-    })
 }
 
 export {sendMail}

@@ -19,7 +19,7 @@ const mailLogic = async(req, res, next) => {
 
         const files = req.files
         console.log(req.files)
-        
+
         // reciever ko mail ya hunxa
         const {mail} = req.body  
         const text = req.body?.text ?? ""
@@ -29,11 +29,6 @@ const mailLogic = async(req, res, next) => {
         })  
 
         await mailDocuments(mail, filenameWithpath, text)
-
-        // now, hmaile mail pathaisake paxi, server bata sabai gayeko attachments haru hamile hatauna milxa
-        // for(let file of filenameWithpath){
-        //     fs.unlinkSync(file.path)
-        // }
 
         res.json({
             success : true,
