@@ -6,6 +6,7 @@ import {connection_db} from "./config/db.config.js"
 import { server_middleware } from "./middleware/server.middleware.js"
 import {error_handler} from "./middleware/error_handler.middleware.js"
 import { mailRouter } from "./routes/mail.route.js"
+import { chatRouter } from "./routes/chat.route.js"
 
 // to access the .env file
 dotenv.config()
@@ -17,13 +18,21 @@ const app = express()
 const server = http.createServer(app)
 
 // now also create the socket.io io from the http server
-const io = new Server(server)
+const io = new Server(server, 
+    {
+        cors: {
+                origin: "http://localhost:3000",
+                credentials: true,
+        }
+    }
+)
 
 // this will run all the required middleware in our system
 server_middleware(app)
 
 //router
 app.use("/api", mailRouter)
+app.use("/api", chatRouter)
 
 // error handlre
 app.use(error_handler)
