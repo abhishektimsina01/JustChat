@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
     },
     filename : (req, file, cb)=>{
         const filenameTime = Date.now()
-        cb(null, file.fieldname + '-' + filenameTime + path.extname(file.originalname))
+        cb(null, file.fieldname + '-' + file.originalname + '-' +filenameTime + path.extname(file.originalname))
     }
 })
 
@@ -18,15 +18,7 @@ const upload = multer({
     limits : {
         fileSize : 1024 * 1024 * 3,
         files : 5
-    },
-    // fileFilter : (req, file, cb) =>{
-    //     if(file.mimetype.startsWith("image") || file.mimetype.startsWith("pdf")){
-    //         cb(null, true)
-    //     }
-    //     else{
-    //         cb(null, new Error("It must be either image or pdf"))
-    //     }
-    // }
+    }
 })
 
 
