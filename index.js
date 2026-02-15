@@ -6,7 +6,6 @@ import {connection_db} from "./config/db.config.js"
 import { server_middleware } from "./middleware/server.middleware.js"
 import {error_handler} from "./middleware/error_handler.middleware.js"
 import { mailRouter } from "./routes/mail.route.js"
-import { mailDocuments } from "./mails/Mail.mail.js"
 
 // to access the .env file
 dotenv.config()
