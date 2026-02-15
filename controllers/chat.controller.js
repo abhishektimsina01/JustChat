@@ -33,7 +33,6 @@ const fetchRoomId = async(req, res, next) =>{
 
 const uploadFile = async(req, res, next) =>{
     try{
-
         // yedi malai 0 file send gareko xa vhane maile error falna parney hunxa
         // since malai pathako files haru sabai maile middleware bata parsing garera req.file bata pauna sakxu
         if(req.files == undefined){

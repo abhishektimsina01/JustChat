@@ -34,21 +34,43 @@ io.on("connection", (socket)=>{
     io.emit("connection", `${socket.id} has joined the chat`)
 
     // make JoinRoom Event
+
     socket.on("joinRoom", async(roomId) => {
         socket.data.roomId = roomId
+        const roomExist = io.sockets.adapter.rooms.has(roomId)
+        if(!roomExist){
+            const room = await RoomModel.create({roomId : roomId})
+            console.log(room, "created")
+        }
+        else{
+            const room = await RoomModel.findOne({roomId : roomId})
+            console.log(room, "found")
+        }
         socket.join(roomId)
-        // const room = await RoomModel.create({})
         io.to(roomId).emit("new joining", `Welcome to the chat ${socket.id}, total sockets in the room [${io.sockets.adapter.rooms.get(roomId)}]`)
         console.log(io.sockets.adapter.rooms.get(roomId))
     })
 
     // make message listner from socket
-    socket.on("message", async(data, roomId)=>{
-        console.log(data)
+    socket.on("message", async(data)=>{
+        const roomId = socket.data.roomId
+        const {type, message} = data
         console.log(roomId)
-        const msg = await RoomModel.findOne({roomId : roomId})
-        io.to(roomId).emit("message", data)
+        const room = await RoomModel.findOne({roomId : roomId})
+        room.messages.push({
+            msgType : type,
+            message : message
+        })
+        await room.save()
+        io.to(roomId).emit("message", room.messages[room.messages.length - 1])
+    })
 
+    //yedi user le file send gareko rahexa vhaney, hamile tyo room ma vhayeko sabai sockets lai file aako msg send garna parne hunxa
+    //tyo file aako nitification ma hamile tyo file ko real originalname and secure_url dina parne hunxa
+    socket.on("file", async(file)=>{
+           const {filename, secure_urls} = file
+           console.log(filename, ...secure_urls)
+           io.to(socket.data.room).emit("file sent", file)
     })
 
     socket.on('disconnect', ()=>{
