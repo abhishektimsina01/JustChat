@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 const MessageSchema = new mongoose.Schema({
     _id : false,
-    msgType : {type : String, enum : {values : ["message", "files"], message : "wrong input"}, required : true},
+    msgType : {type : String, default : "message" },
     message : {type : String, required : true}
 }, {timestamps : true, versionKey : false})
 

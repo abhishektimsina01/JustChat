@@ -24,16 +24,18 @@ const io = new Server(server,{
     cors : {
         origin : "*",
         credentials : true
-    }
+    },
+    // cookie : true
 })
 
 // middleware for the socket.io
 // yo middleware handshake paxi use garinxa (jaba hamro client le, FE ma socket initialize garxa)
 io.use((socket, next) =>{
     //hamilai user kun room ma xa chainxa tesko lagi
-    const cookie = cookie.parse(socket.handshake.headers.cookie || "")
-    const roomId = cookie.roomId
-    socket.data.roomId = roomId
+    // const data = socket.request.headers.cookie || ""
+    // console.log("________________", socket.request.headers)
+    // const roomId = data.roomId
+    // socket.data.roomId = roomId
     next()  
 })
 
@@ -42,8 +44,8 @@ io.on("connection", (socket)=>{
     io.emit("connection", `${socket.id} has joined the chat`)
 
     // make JoinRoom Event
-
     socket.on("joinRoom", async(roomId) => {
+        socket.data.roomId = roomId
         const roomExist = io.sockets.adapter.rooms.has(roomId)
         if(!roomExist){
             const room = await RoomModel.create({roomId : roomId})
@@ -61,11 +63,10 @@ io.on("connection", (socket)=>{
     // make message listner from socket
     socket.on("message", async(data)=>{
         const roomId = socket.data.roomId
-        const {type, message} = data
+        const message = data
         console.log(roomId)
         const room = await RoomModel.findOne({roomId : roomId})
         room.messages.push({
-            msgType : type,
             message : message
         })
         await room.save()
@@ -74,11 +75,6 @@ io.on("connection", (socket)=>{
 
     //yedi user le file send gareko rahexa vhaney, hamile tyo room ma vhayeko sabai sockets lai file aako msg send garna parne hunxa
     //tyo file aako nitification ma hamile tyo file ko real originalname and secure_url dina parne hunxa
-    socket.on("file", async(file)=>{
-           const {filename, secure_urls} = file
-           console.log(filename, ...secure_urls)
-           io.to(socket.data.room).emit("file sent", file)
-    })
 
     socket.on('disconnect', ()=>{
         socket.leave(socket.data.roomId)    
@@ -93,7 +89,7 @@ server_middleware(app)
 
 //router
 app.use("/api", mailRouter)
-app.use("/socket", chatRouter)
+app.use("/api/chat/", chatRouter)
 
 // error handlre
 app.use(error_handler)
