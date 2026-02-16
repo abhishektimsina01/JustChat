@@ -19,8 +19,12 @@ const fetchRoomId = async(req, res, next) =>{
             })
             console.log("new room", room, "created")
         }
-        
-        res.json({
+        res.cookie("roomId", roomId,{
+            httOnly : true,
+            secure : true,
+            site : "static",
+            maxAge : 24 * 60 * 60
+        }).json({
             room : room.roomId,
             messages : room.messages
         })
@@ -58,7 +62,7 @@ const uploadFile = async(req, res, next) =>{
         );
 
         console.log(filepaths)
-
+        
         console.log(req.files)
         //sabai kam vhayepaxi remove the files from our uploads
         for(let file of req.files){

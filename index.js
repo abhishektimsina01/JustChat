@@ -7,9 +7,8 @@ import { server_middleware } from "./middleware/server.middleware.js"
 import {error_handler} from "./middleware/error_handler.middleware.js"
 import { mailRouter } from "./routes/mail.route.js"
 import { chatRouter } from "./routes/chat.route.js"
-import { Cloudinary } from "./utils/cloudinary.js"
-import { upload } from "./middleware/multer.js"
 import { RoomModel } from "./models/room.model.js"
+import cookie from "cookie"
 
 // to access the .env file
 dotenv.config()
@@ -21,11 +20,20 @@ const app = express()
 const server = http.createServer(app)
 
 // now also create the socket.io io from the http server
-const io = new Server(server)
+const io = new Server(server,{
+    cors : {
+        origin : "*",
+        credentials : true
+    }
+})
 
 // middleware for the socket.io
 // yo middleware handshake paxi use garinxa (jaba hamro client le, FE ma socket initialize garxa)
 io.use((socket, next) =>{
+    //hamilai user kun room ma xa chainxa tesko lagi
+    const cookie = cookie.parse(socket.handshake.headers.cookie || "")
+    const roomId = cookie.roomId
+    socket.data.roomId = roomId
     next()  
 })
 
@@ -36,7 +44,6 @@ io.on("connection", (socket)=>{
     // make JoinRoom Event
 
     socket.on("joinRoom", async(roomId) => {
-        socket.data.roomId = roomId
         const roomExist = io.sockets.adapter.rooms.has(roomId)
         if(!roomExist){
             const room = await RoomModel.create({roomId : roomId})
